@@ -39,7 +39,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: jsato-private-repo/any-old-app:${{ steps.prep.outputs.VERSION }}
+          tags: js482/jsato-private-repo/:${{ steps.prep.outputs.VERSION }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
