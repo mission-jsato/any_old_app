@@ -1,41 +1,41 @@
-# ./.github/workflows/03-release-manifests.yaml
-name: Build jsonnet
-on:
-  push:
-    tags: ['release/*']
-    branches: ['release']
+# # ./.github/workflows/03-release-manifests.yaml
+# name: Build jsonnet
+# on:
+#   push:
+#     tags: ['release/*']
+#     branches: ['release']
 
-jobs:
-  run:
-    name: jsonnet push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Prepare
-        id: prep
-        run: |
-          VERSION=${GITHUB_SHA::8}
-          if [[ $GITHUB_REF == refs/tags/release/* ]]; then
-            VERSION=${GITHUB_REF/refs\/tags\/release\//}
-          fi
-          echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          echo ::set-output name=VERSION::${VERSION}
+# jobs:
+#   run:
+#     name: jsonnet push
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Prepare
+#         id: prep
+#         run: |
+#           VERSION=${GITHUB_SHA::8}
+#           if [[ $GITHUB_REF == refs/tags/release/* ]]; then
+#             VERSION=${GITHUB_REF/refs\/tags\/release\//}
+#           fi
+#           echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+#           echo ::set-output name=VERSION::${VERSION}
 
-      - name: Checkout repo
-        uses: actions/checkout@v3
+#       - name: Checkout repo
+#         uses: actions/checkout@v3
 
-      - name: Setup kubecfg CLI
-        uses: kingdonb/kubecfg/action@main
+#       - name: Setup kubecfg CLI
+#         uses: kingdonb/kubecfg/action@main
 
-      - name: kubecfg show
-        run: "./ci/kubecfg.sh VERSION=${{ steps.prep.outputs.VERSION }}"
+#       - name: kubecfg show
+#         run: "./ci/kubecfg.sh VERSION=${{ steps.prep.outputs.VERSION }}"
 
-      - name: Prepare target branch
-        run: ./ci/rake.sh deploy
+#       - name: Prepare target branch
+#         run: ./ci/rake.sh deploy
 
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: 'production.yaml'
-          branch: deploy
-          message: "[ci skip] from ${{ steps.prep.outputs.VERSION }}"
-          signoff: true
+#       - name: Commit changes
+#         uses: EndBug/add-and-commit@v9
+#         with:
+#           add: 'production.yaml'
+#           branch: deploy
+#           message: "[ci skip] from ${{ steps.prep.outputs.VERSION }}"
+#           signoff: true
